@@ -1,0 +1,89 @@
+gst-launch-0.10 rtspsrc location=rtsp://10.0.5.134/ ! fakesink
+
+
+
+
+******* PARAMETERES **************
+rtph264depay ==> Extracts H264 video from RTP packets
+
+
+// Calisiyor
+GST_DEBUG=qtdemux:5,faad:5,ffdec_h264:5 gst-launch filesrc location=/media/thesis/Gstreamer/pub_Irma.mp4 ! qtdemux name=demuxer demuxer. ! queue ! faad ! audioconvert ! audioresample ! autoaudiosink demuxer. ! queue ! ffdec_h264 ! ffmpegcolorspace ! autovideosink 2
+
+// Calismadi
+GST_DEBUG=qtdemux:5,faad:5,ffdec_h264:5 gst-launch rtspsrc location=rtsp://10.0.5.134/ ! qtdemux name=demuxer demuxer. ! queue ! faad ! audioconvert ! audioresample ! autoaudiosink demuxer. ! queue ! ffdec_h264 ! ffmpegcolorspace ! autovideosink 2
+
+gst-launch -v rtspsrc location="rtsp://10.0.5.134/" name=demux demux. ! queue ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false demux. ! queue ! rtppcmadepay  ! alawdec ! autoaudiosink
+
+ `gst-launch -e rtspsrc location='rtsp://10.0.5.134/' latency=0 name=d d. ! queue ! capsfilter caps="application/x-rtp,media=video" ! rtph264depay ! mpegtsmux name=mux ! filesink location=file.ts d. ! queue ! capsfilter caps="application/x-rtp,media=audio" ! decodebin ! audioconvert ! audioresample ! lamemp3enc ! mux.`
+
+////// *********** LINKLER ********** ////////
+
+- rtsp://10.0.5.225:3049/S3
+- rtsp://10.0.5.101:1935/live/L_400_IP_CAMERA_1
+- rtsp://10.0.5.134:554/
+- Axis 
+
+
+/////////////// *********** CALISANLAR ********* //////////////////
+// fps dusuk 4k oldugu icin
+
+gst-launch -v rtspsrc location="rtsp://10.0.5.225:3049/S3" name=demux demux. ! queue ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false demux. ! queue ! rtppcmadepay  ! alawdec ! autoaudiosink
+
+gst-launch -v rtspsrc location="rtsp://10.0.5.101:1935/live/L_400_IP_CAMERA_1" name=demux demux. ! queue ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false demux. ! queue ! rtppcmadepay  ! alawdec ! autoaudiosink
+
+gst-launch -v rtspsrc location="rtsp://10.0.5.101:1935/vod/_definst_/mp4:10_0_5_104_IMPORTED/Sony_Swordish_Test/Sony_Swordish_Test.mp4" name=demux demux. ! queue ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false demux. ! queue ! rtppcmadepay  ! alawdec ! autoaudiosink
+
+
+gst-launch-0.10 -v rtspsrc location="rtsp://10.0.5.101:1935/vod/_definst_/mp4:10_0_5_104_IMPORTED/Sony_Swordish_Test/Sony_Swordish_Test.mp4" name=demux demux. ! queue ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false demux. ! queue  ! alawdec
+
+gst-launch-1.0 -v rtspsrc location="rtsp://10.0.5.101:1935/vod/_definst_/mp4:10_0_5_104_IMPORTED/Sony_Swordish_Test/Sony_Swordish_Test.mp4" name=demux demux. ! queue ! rtph264depay ! avdec_h264  ! autovideosink sync=false demux. ! queue  ! alawdec
+
+
+/// az parametre ile calisanlar
+
+gst-launch -v rtspsrc location="rtsp://10.0.5.101:1935/live/L_400_IP_CAMERA_1?multicastplay" ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false
+
+gst-launch -v rtspsrc location="rtsp://10.0.5.101:1935/live/L_400_IP_CAMERA_1?multicastplay" name=demux demux. ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false
+
+
+gst-launch -v rtspsrc location="rtsp://10.0.5.225:3049/S3" name=demux demux. ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false
+
+// latency 0 ile calistirma
+gst-launch -v rtspsrc location="rtsp://10.0.5.101:1935/live/L_400_IP_CAMERA_1?multicastplay" latency=0 name=demux demux. ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false
+
+gst-launch -v rtspsrc location="rtsp://root:root@10.0.5.235:554/axis-media/media.amp
+" latency=0 name=demux demux. ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! autovideosink sync=false
+
+-------------------------------------------------------------------------------------------------------------
+
+ gst-launch -e rtspsrc location=rtsp://10.0.5.74:3049/S1 ! decodebin ! h264parse ! mp4mux ! filesink location=/home/fatih/Desktop/test.mp4
+
+gst-launch-1.0 -e rtspsrc location="rtsp://10.0.5.74:3049/S1" protocols=udp ! rtph264depay ! h264parse ! mp4mux ! filesink location=/home/fatih/Desktop/test.mp4
+
+gst-launch-1.0 -e rtspsrc location="rtsp://10.0.5.74:3049/S1" name=demux demux. ! rtph264depay ! h264parse ! filesink location=/home/fatih/Desktop/test.mp4
+
+
+gst-launch -e rtspsrc location=rtsp://10.0.5.74:3049/S1 ! qtdemux ! video/x-h264 ! rtph264pay ! filesink location=/home/fatih/Desktop/test.mp4
+
+------------------------ 4K CALISAN -----------------------------------
+gst-launch-1.0 rtspsrc location="rtsp://10.0.5.101:1935/vod/_definst_/mp4:10_0_5_104_IMPORTED/Sony_Swordish_Test/Sony_Swordish_Test.mp4" protocols=GST_RTSP_LOWER_TRANS_TCP latency=0 ! rtph264depay ! queue ! vaapih264dec ! videoconvert ! fpsdisplaysink sync=false
+
+
+gst-launch-1.0 rtspsrc location="rtsp://10.0.5.101:1935/vod/_definst_/mp4:10_0_5_104_IMPORTED/Sony_Swordish_Test/Sony_Swordish_Test.mp4"  latency=0 ! rtph264depay ! vaapih264dec ! videoconvert ! fpsdisplaysink sync=false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

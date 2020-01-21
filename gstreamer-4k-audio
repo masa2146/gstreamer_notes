@@ -1,0 +1,23 @@
+
+
+--------------------- WTIHOUT AUDIO  -------------------------------------------
+
+gst-launch-1.0 rtspsrc location="rtsp://10.0.5.101:1935/vod/_definst_/mp4:10_0_5_104_IMPORTED/Sony_Swordish_Test/Sony_Swordish_Test.mp4" protocols=GST_RTSP_LOWER_TRANS_TCP latency=0 ! rtph264depay ! queue ! vaapih264dec ! videoconvert ! fpsdisplaysink sync=false
+
+---------------------------------------------------------------------------------
+
+/////////////////////////////////////////////////////////////////////////////////
+
+---------------- AUDIO WITH AAC CODEC AND TCP PROTOCOLS -------------------------
+
+gst-launch-1.0 rtspsrc location="rtsp://10.0.5.101:1935/vod/_definst_/mp4:10_0_5_104_IMPORTED/Sony_Swordish_Test/Sony_Swordish_Test.mp4" protocols=GST_RTSP_LOWER_TRANS_TCP latency=0 name=blt blt. ! rtpmp4gdepay ! avdec_aac ! audioresample ! audioconvert ! autoaudiosink blt.! queue ! rtph264depay ! vaapih264dec ! videoconvert ! fpsdisplaysink sync=false
+
+---------------------------------------------------------------------------------
+
+/////////////////////////////////////////////////////////////////////////////////
+
+---------------- AUDIO WITH AAC CODEC AND TCP PROTOCOLS -------------------------
+
+gst-launch-1.0 rtspsrc location="rtsp://10.0.5.101:1935/vod/_definst_/mp4:10_0_5_104_IMPORTED/Sony_Swordish_Test/Sony_Swordish_Test.mp4" protocols=GST_RTSP_LOWER_TRANS_UDP latency=0 name=blt blt. ! rtpmp4gdepay ! avdec_aac ! audioresample ! audioconvert ! autoaudiosink blt.! queue ! rtph264depay ! vaapih264dec ! videoconvert ! fpsdisplaysink sync=false 
+
+---------------------------------------------------------------------------------
